@@ -1,9 +1,6 @@
 name: Build node js app
 run-name: Building components
 on: 
-  pull_request:
-    branches: 
-      - master
   push:  
     branches: 
       - master
