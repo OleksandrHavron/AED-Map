@@ -1,15 +1,15 @@
-name: Build images
+name: Build docker images
 on:
   pull_request:
     branches: 
-      - develop
+      - master
   push:  
     branches: 
-      - develop
+      - master
 
 jobs:
   test:
-    name: Build
+    name: Build Server image
     runs-on: ubuntu-latest
     env:
       COMPOSE_FILE: docker-compose.yml
