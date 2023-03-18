@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import useAlert from '../Alert/useAlert';
+import { makeStyles } from '@material-ui/core/styles';
+import useAlert from '../Alert/use-alert';
 
 const useStyles = makeStyles({
   container: {

@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ModalWrapper from '../ModalWrapper';
+
 import Content from './Content';
+import ModalWrapper from '../ModalWrapper';
 
 const ConfirmationModalWrapper = ({
   ButtonOpen,

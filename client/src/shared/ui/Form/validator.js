@@ -27,6 +27,9 @@ const FormValidation = Yup.object().shape({
     .required('Поле обов\'язкове')
     .min(0, 'Значення поля не може бути від\'ємне')
     .max(20, 'Значення поля не може бути вище 20'),
+  defs_amount: Yup.number()
+    .default(1)
+    .min(1, 'Значення поля має бути більшим за одиницю'),
 });
 
 export default FormValidation;

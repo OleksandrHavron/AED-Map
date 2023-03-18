@@ -1,12 +1,13 @@
 import React from 'react';
-import MuiPhoneNumber from 'material-ui-phone-number';
-import { connect, FieldArray, getIn } from 'formik';
 import PropTypes from 'prop-types';
+import { connect, FieldArray, getIn } from 'formik';
+
+import { makeStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import MuiPhoneNumber from 'material-ui-phone-number';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import { makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles({
   centered: {

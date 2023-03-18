@@ -13,10 +13,12 @@
     "ecmaVersion": 2018
   },
   "rules": {
-    "no-multiple-empty-lines": ["error", { "max": 1 }],
-    "indent": ["error", 2, { "SwitchCase": 1 }],
-    "linebreak-style": [0, "unix"],
+    "avoidEscape": true,
+    "semi": ["error", "always"],
     "quotes": ["error", "single"],
-    "semi": ["error", "always"]
+    "allowTemplateLiterals": true,
+    "linebreak-style": [0, "unix"],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "no-multiple-empty-lines": ["error", { "max": 1 }]
   }
 }

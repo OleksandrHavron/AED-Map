@@ -1,0 +1,120 @@
+version: 2.1
+orbs:
+  aws-cli: circleci/aws-cli@3.1.1
+jobs:
+  pre_build_ui:
+    working_directory: ~/app
+    docker:
+      - image: cimg/node:14.17.4
+    steps:
+      - checkout
+      - run:
+          name: Go to client folder and install all dependencies
+          command: |
+            pwd
+            cd client/
+            pwd
+            yarn install
+      - run:
+          name: Build UI
+          command: |
+            pwd
+            cd client/
+            yarn build
+      - when:
+          condition:
+            or:
+              - equal: [master, << pipeline.git.branch >>]
+              - equal: [develop, << pipeline.git.branch >>]
+          steps:
+            - aws-cli/setup:
+                aws-access-key-id: AWS_3040_ACCESS_KEY
+                aws-secret-access-key: AWS_3040_SECRET_KEY
+                aws-region: AWS_3040_DEFAULT_REGION
+            - run:
+                name: Create S3 bucket and move files from the build folder to the bucket
+                command: |
+                  cd client/build
+                  aws s3 mb s3://aed-map-ui-build-$CIRCLE_WORKFLOW_ID
+                  aws s3 sync . s3://aed-map-ui-build-$CIRCLE_WORKFLOW_ID
+  build_ui:
+    working_directory: ~/app
+    docker:
+      - image: cimg/node:14.17.4
+    steps:
+      - checkout
+      - run: node --version
+      - aws-cli/setup:
+          aws-access-key-id: AWS_3040_ACCESS_KEY
+          aws-secret-access-key: AWS_3040_SECRET_KEY
+          aws-region: AWS_3040_DEFAULT_REGION
+      - run:
+          name: Copy the UI build from S3 bucket
+          command: |
+            cd client/
+            mkdir build
+            aws s3 cp s3://aed-map-ui-build-$CIRCLE_WORKFLOW_ID/ build/ --recursive
+            aws s3 rb s3://aed-map-ui-build-$CIRCLE_WORKFLOW_ID --force
+      - run:
+          name: Copy AWS_3040_EC2_KEY_NAME file from s3 bucket and add permissions fo it
+          command: |
+            aws s3 cp s3://aed-map-config/$AWS_3040_EC2_KEY_NAME ~/app/
+            chmod 400 $AWS_3040_EC2_KEY_NAME
+      - run:
+          name: Connect to EC2 instance and clear the UI build
+          command: |
+            ssh -o StrictHostKeyChecking=no -i ~/app/$AWS_3040_EC2_KEY_NAME $AWS_3040_EC2_INSTANCE "cd ~/circleci_scripts/;. clear_ui.sh"
+      - run:
+          name: Copy the UI build to EC2 instance
+          command: |
+            cd client
+            scp -r -i ~/app/$AWS_3040_EC2_KEY_NAME build/* $AWS_3040_EC2_INSTANCE:apps/AED-Map/client/build/
+  build_node_server:
+    working_directory: ~/build
+    docker:
+      - image: cimg/base:2022.06
+    steps:
+      - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_3040_ACCESS_KEY
+          aws-secret-access-key: AWS_3040_SECRET_KEY
+          aws-region: AWS_3040_DEFAULT_REGION
+      - run:
+          name: Copy AWS_3040_EC2_KEY_NAME file from s3 bucket and add permissions fo it
+          command: |
+            aws s3 cp s3://aed-map-config/$AWS_3040_EC2_KEY_NAME ~/build/
+            chmod 400 $AWS_3040_EC2_KEY_NAME
+      - run:
+          name: Connect to EC2 instance and run all needed commands
+          command: |
+            ssh -o StrictHostKeyChecking=no -i ~/build/$AWS_3040_EC2_KEY_NAME $AWS_3040_EC2_INSTANCE "source ~/.nvm/nvm.sh; cd ~/circleci_scripts/;. restart_server.sh"
+workflows:
+  version: 2
+  build_aed_map:
+    jobs:
+      - pre_build_ui
+      - approve_rebuild_server:
+          type: approval
+          requires:
+            - pre_build_ui
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+      - build_ui:
+          requires:
+            - approve_rebuild_server
+          filters:
+            branches:
+              only:
+                - master
+                - develop
+      - build_node_server:
+          requires:
+            - build_ui
+          filters:
+            branches:
+              only:
+                - master
+                - develop

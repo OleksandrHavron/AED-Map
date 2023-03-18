@@ -1,0 +1,33 @@
+{
+  "development": {
+    "PORT": 3012,
+    "NODE_ENV": "development",
+    "BASE_URL": "http://localhost:3000",
+    "MONGO_URL": "mongodb://localhost:27017/",
+    "MONGO_DB": "defibrillatorDB",
+    "SECRET_JWT_KEY_AUTH": "defibrillator_secret",
+    "EXPIRE_TIME_JWT_AUTH": 3600,
+    "SECRET_JWT_KEY_SIGN_UP": "defibrillator_secret",
+    "EXPIRE_TIME_JWT_SIGN_UP": 3600,
+    "SECRET_JWT_KEY_RESET": "defibrillator_secret",
+    "EXPIRE_TIME_JWT_RESET": 3600,
+    "EMAIL_USER": "email.service.aed.maps@gmail.com",
+    "EMAIL_USER_PASSWORD": "qwe123Q!",
+    "EMAIL_FROM": "AED-maps <email.service.aed.maps@gmail.com>",
+    "EMAIL_PASSWORD": "Defibrillator1!",
+    "ADMIN_EMAIL": "admin@admin.com",
+    "ADMIN_PASSWORD": "qwe123Q!",
+    "REFRESH_TOKEN": "1//04rCKbN3IQd17CgYIARAAGAQSNwF-L9IrdR7PhVXtwIxXnJUnQe_AXBkn8AkYqYgEpnQyDpYQHCdjeyIfuN96ET0aSoO6EqTxI8E",
+    "ACCESS_TOKEN": "ya29.A0ARrdaM9vNJ1GJLJaE1_kZ2cYTWsgWNtTSj08EOl2El0jamzJULqmIVtMLrWrfiMCFeEkrCyIY265VRFP5yLHtBaz4DnOmmsLJF_bLkX_Mem2fjbt0nzreHkJQ3V-MYcFPMBfF4J_WsRNNH9g8l2AxJQkuP3JYUNnWUtBVEFTQVRBU0ZRRl91NjFWcldNV1ZHTXlwLWVjTEtkUnlOUG5fQQ0163",
+    "CLIENT_ID": "348442824843-8ed9gper4f35irqh2bdg9lj7m8iflu7f.apps.googleusercontent.com",
+    "CLIENT_SECRET": "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"
+  },
+  "production": {
+    "NODE_ENV": "production",
+    "NODE_OPTIONS": "--http-parser=legacy",
+    "BASE_URL": "http://aed-map.pp.ua"
+  },
+  "docker": {
+    "MONGO_URL": "mongodb://host.docker.internal:27017/"
+  }
+}

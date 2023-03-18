@@ -1,24 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { Formik, Form } from 'formik';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
-import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Formik, Form } from 'formik';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import AddAdressText from './AddAdressText';
+
+import AddMoreInfo from './AddMoreInfo';
+import ButtonBack from '../ButtonBack';
 import PlatesSelect from './PlatesSelect';
 import AddTelephone from './AddTelephone';
-import AddMoreInfo from './AddMoreInfo';
-import FormValidation from './validator';
-import useAlert from '../Alert/useAlert';
-import { MyTextField, MyImageField } from '../Fields';
+import AddAdressText from './AddAdressText';
 import MyTimeField from '../Fields/timeField';
+import { MyTextField, MyImageField } from '../Fields';
+
+import FormValidation from './validator';
+import useAlert from '../Alert/use-alert';
+
 import {
   setPage,
   setData
-} from '../../../modules/Sidebar/components/ItemList/actions/list';
-import ButtonBack from '../ButtonBack';
+} from 'shared/store/defs/actions';
 
 const useStyles = makeStyles({
   input: {
@@ -79,7 +83,10 @@ const MyForm = ({
         fullTimeAvailable: fullTimeStatus,
         availableFrom: fullTimeStatus ? null : timeFrom,
         availableUntil: fullTimeStatus ? null : timeUntil,
-        actualDate
+        actualDate,
+        defs_amount: !!values.defs_amount
+          ? values.defs_amount
+          : 1
       });
       ShowAlert({
         open: true,
@@ -107,7 +114,7 @@ const MyForm = ({
         validationSchema={FormValidation}
         onSubmit={handleSubmit}
       >
-        {({ isValid, setFieldValue }) => {
+        {({ isValid, dirty, setFieldValue }) => {
           return (
             <Form>
               <AddAdressText className={classes.input} />
@@ -116,11 +123,9 @@ const MyForm = ({
                 label="Введіть назву"
                 className={classes.input}
               />
-
               <MyTimeField
                 label={'Коли доступний пристрій?'}
               />
-
               <MyTextField
                 name="storage_place"
                 label="Де розташований в будівлі?"
@@ -135,11 +140,21 @@ const MyForm = ({
                   inputProps: { min: 0, max: 20 }
                 }}
               />
+              <MyTextField
+                className={classes.input}
+                name="defs_amount"
+                label="Скільки пристроїв за цією адресою?"
+                type="number"
+                InputProps={{
+                  inputProps: { min: 1 }
+                }}
+              />
               <PlatesSelect name="informational_plates" />
               <AddTelephone
                 className={classes.input}
                 name="phone"
               />
+
               <MyImageField
                 variant="contained"
                 color="primary"
@@ -149,6 +164,7 @@ const MyForm = ({
                 name="images"
                 setFieldValue={setFieldValue}
               />
+
               <AddMoreInfo
                 className={classes.input}
                 name="additional_information"
@@ -159,7 +175,7 @@ const MyForm = ({
                 color="primary"
                 size="large"
                 type="submit"
-                disabled={!isValid}
+                disabled={!isValid || !dirty}
                 endIcon={<SaveIcon />}
                 onClick={() => {
                   if (isValid === false) {
@@ -192,6 +208,7 @@ MyForm.propTypes = {
     phone: PropTypes.array.isRequired,
     additional_information: PropTypes.string.isRequired,
     storage_place: PropTypes.string.isRequired,
+    defs_amount: PropTypes.string,
     coordinates: PropTypes.array.isRequired,
     images: PropTypes.array.isRequired
   }).isRequired,

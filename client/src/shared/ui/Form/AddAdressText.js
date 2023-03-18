@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from '@material-ui/core/TextField';
-import { connect as connectFormik } from 'formik';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { addNewPoint } from '../../../modules/MapHolder/actions/mapState';
+import { connect } from 'react-redux';
+import { connect as connectFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+
 import {
   getGeocodingOptions,
   getGeocodingDetails,
   getReverseGeocoding
-} from '../../api';
+} from 'shared/api/gmap';
+import { addNewPoint } from 'shared/store/point/actions';
 
 const AddAdressText = ({
   formik,

@@ -124,7 +124,7 @@ export const mockError = new Error(
 export const mockMap = {
   lng: 24.0311,
   lat: 49.842,
-  zoom: 12.5
+  zoom: 12.5,
 };
 
 export const mockUserPosition = {
@@ -187,3 +187,6 @@ export const photos = [
     author: 'author 3'
   }
 ];
+
+
+

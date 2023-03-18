@@ -4,20 +4,19 @@
   "description": "backend part of defibrillator project",
   "main": "server.js",
   "scripts": {
-    "client": "cd client/ && yarn start",
-    "server": "nodemon -r dotenv/config start.js",
-    "build": "cd client && yarn build",
-    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "start": "node start.js",
-    "lint": "eslint server.js ./config ./consts ./middleware ./models ./routes ./shared ./emails ./websocket --ext .js",
+    "build": "cd client && yarn build",
+    "start:client": "cd client/ && yarn start",
+    "start:server:dev:local": "env-cmd -e development -r ./environment/cmdrc.json nodemon start.js",
+    "start:server:dev": "env-cmd -e development,production -r ./environment/cmdrc.json nodemon start.js",
+    "start:server:prod": "env-cmd -e development,production,docker -r ./environment/cmdrc.json nodemon start.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn start:server:dev:local\" \"yarn start:client\"",
+    "lint": "eslint server.js ./config ./models ./api ./shared --ext .js",
     "test-client": "cd client/ && yarn test",
-    "test-server": "cross-env NODE_ENV=node jest routes --coverage",
-    "migrate-admin-down": "migrate-mongo down -f ./migrations/adminMigration/migrate-mongo-config.js",
-    "migrate-admin-up": "migrate-mongo up -f ./migrations/adminMigration/migrate-mongo-config.js",
-    "migrate-admin-status": "migrate-mongo status -f ./migrations/adminMigration/migrate-mongo-config.js",
-    "migrate-defibrillators-down": "migrate-mongo down -f ./migrations/defibrillatorsMigration/migrate-mongo-config.js",
-    "migrate-defibrillators-up": "migrate-mongo up -f ./migrations/defibrillatorsMigration/migrate-mongo-config.js",
-    "migrate-defibrillators-status": "migrate-mongo status -f ./migrations/defibrillatorsMigration/migrate-mongo-config.js"
+    "test-server": "cross-env NODE_ENV=node jest api --coverage",
+    "database-up": "migrate-mongo up -f ./migrate-mongo-config.js",
+    "database-down": "migrate-mongo down -f ./migrate-mongo-config.js",
+    "database-status": "migrate-mongo status -f ./migrate-mongo-config.js"
   },
   "jest": {
     "testEnvironment": "node",
@@ -26,12 +25,12 @@
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "./middleware/*.js",
-      "./websocket/*.js",
-      "./migrations/*.js"
+      "./shared/websocket/*.js",
+      "./shared/middleware/*.js",
+      "./db/migrations/*.js"
     ],
     "collectCoverageFrom": [
-      "./routes/*.js"
+      "./api/*.js"
     ],
     "coverageThreshold": {
       "global": {
@@ -64,6 +63,7 @@
     "express-validator": "^6.3.1",
     "gridfs-stream": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "long-timeout": "^0.1.1",
     "migrate-mongo": "^7.1.0",
     "mongoose": "^5.9.5",
@@ -79,6 +79,7 @@
     "concurrently": "^5.0.2",
     "cross-env": "^7.0.0",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^6.6.0",
     "eslint-config-node": "^4.0.0",
     "eslint-config-prettier": "^6.9.0",

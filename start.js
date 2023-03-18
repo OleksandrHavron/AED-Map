@@ -1,9 +1,4 @@
-const { server } = require('./server');
-const { dbInit } = require('./db');
+const database = require('./db');
+const server = require('./server');
 
-dbInit();
-
-const PORT = 3012;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+database.bootstrap(server.bootstrap);

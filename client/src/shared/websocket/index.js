@@ -1,18 +1,17 @@
 import io from 'socket.io-client';
 
+import { signOut } from 'shared/store/user/actions';
 import store from '../store';
-import { signOut } from '../../modules/Auth/actions/user';
+import { BASE_URL } from 'shared/consts/url';
 
-const socket = io('http://localhost:3000', {
+const socket = io(`${BASE_URL}`, {
   autoConnect: false
 });
 
-const socketAuthOpen = () => {
-  const authorization = JSON.parse(
-    localStorage.getItem('authorization')
-  );
-  const token = authorization && authorization.slice(7);
+const getToken = () =>
+  JSON.parse(localStorage.getItem('authorization') || null);
 
+const socketAuthOpen = (token = getToken()) => {
   socket.connect();
 
   socket.emit('authorization', token);

@@ -4,7 +4,7 @@ import {
   setFullTime,
   setFromTime,
   setUntilTime
-} from '../../../modules/Sidebar/components/EditForm/actions/setFullTime';
+} from 'shared/store/full-time/actions';
 import {
   Checkbox,
   FormControlLabel,
@@ -75,11 +75,7 @@ const MyTimeField = ({
           >
             <MuiMenuItem disabled>з</MuiMenuItem>
             {hours(0, 23).map(hour => (
-              <MuiMenuItem
-                value={hour}
-                key={hour}
-                disabled={timeUntil <= hour}
-              >
+              <MuiMenuItem value={hour} key={hour}>
                 {`${hour}`.padStart(2, '0')}:00
               </MuiMenuItem>
             ))}

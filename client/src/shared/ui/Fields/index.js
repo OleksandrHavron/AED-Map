@@ -1,7 +1,7 @@
-﻿import React, { useRef, useState, useEffect } from 'react';
+﻿import { useField } from 'formik';
 import PropTypes from 'prop-types';
-import { useField } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   TextField,
   InputLabel,
@@ -10,7 +10,9 @@ import {
   Select,
   InputBase,
   Button,
-  Input
+  Input,
+  GridList,
+  GridListTile
 } from '@material-ui/core';
 
 const useStyles = makeStyles({
@@ -27,6 +29,20 @@ const useStyles = makeStyles({
   },
   imageField: {
     display: 'none'
+  },
+  imageItem: {
+    width: '100%',
+    backgroundSize: 'contain'
+  },
+  root: {
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    overflow: 'hidden',
+    marginBottom: '20px'
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+    transform: 'translateZ(0)'
   }
 });
 
@@ -150,8 +166,21 @@ MySelect.propTypes = {
   classes: PropTypes.string
 };
 
-const MyImageField = ({ label, id, name, setFieldValue, ...props }) => {
+const MyImageField = ({
+  label,
+  id,
+  name,
+  setFieldValue,
+  ...props
+}) => {
   const classes = useStyles();
+
+  const [images, setImages] = useState([]);
+  const [aImageUrls, setUrl] = useState([]);
+
+  useEffect(() => {
+    setUrl(images.map(image => URL.createObjectURL(image)));
+  }, [images]);
 
   return (
     <div className={classes.root}>
@@ -166,14 +195,34 @@ const MyImageField = ({ label, id, name, setFieldValue, ...props }) => {
         className={classes.imageField}
         onChange={e => {
           setFieldValue('images', e.currentTarget.files);
+          setImages([...e.target.files]);
         }}
       />
-      
+
       <InputLabel htmlFor={id}>
-        <Button {...props} component='span'>
-          { label }
+        <Button {...props} component="span">
+          {label}
         </Button>
       </InputLabel>
+
+      <div className={classes.root}>
+        <GridList
+          cellHeight={160}
+          className={classes.gridList}
+          cols={2.5}
+        >
+          {aImageUrls &&
+            aImageUrls.map((imageSrc, index) => (
+              <GridListTile key={index}>
+                <img
+                  src={imageSrc}
+                  alt={imageSrc.title}
+                  className={classes.imageItem}
+                />
+              </GridListTile>
+            ))}
+        </GridList>
+      </div>
     </div>
   );
 };
@@ -185,4 +234,10 @@ MyImageField.propTypes = {
   setFieldValue: PropTypes.func.isRequired
 };
 
-export { MyTextField, MySelect, MyInputBase, MyImageField, UploadButton };
+export {
+  MyTextField,
+  MySelect,
+  MyInputBase,
+  MyImageField,
+  UploadButton
+};

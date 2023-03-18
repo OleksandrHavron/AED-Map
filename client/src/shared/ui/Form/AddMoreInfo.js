@@ -1,7 +1,7 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
 import { connect } from 'formik';
 import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
 
 const AddMoreInfo = ({ className, formik }) => {
   return (
@@ -13,7 +13,7 @@ const AddMoreInfo = ({ className, formik }) => {
         className={className}
         variant="filled"
         value={formik.values.additional_information}
-        onChange={(e) => {
+        onChange={e => {
           formik.setFieldValue(
             'additional_information',
             e.target.value
