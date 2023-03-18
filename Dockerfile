@@ -3,7 +3,7 @@
 # 2) Server part
 
 # Name the node stage "uiBuilder"
-FROM node:14.17.4-alpine AS uiBuilder
+FROM node:14.20.1-alpine AS uiBuilder
 # Set working directory
 WORKDIR /app
 # Copy all files from current directory to working dir in image
@@ -12,7 +12,7 @@ COPY ./client .
 RUN yarn install && yarn build
 
 # Name the node stage "serverBuilder"
-FROM node:14.17.4-alpine AS serverBuilder
+FROM node:14.20.1-alpine AS serverBuilder
 # Set working directory
 WORKDIR /app
 # Copy all files from current directory to working dir in image

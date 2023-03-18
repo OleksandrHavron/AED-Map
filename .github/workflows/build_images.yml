@@ -1,0 +1,33 @@
+name: Build docker images
+on:
+  pull_request:
+    branches: 
+      - master
+  push:  
+    branches: 
+      - master
+
+jobs:
+  test:
+    name: Build Server image
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_FILE: docker-compose.yml
+      DOCKER_USER: ${{ secrets.DOCKER_USER }}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to DockerHub
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+    - name: Build docker images
+      run: docker-compose build
+    
+    - name: Push server image to DockerHub
+      run: docker push hnom/aed-map-server:latest #todo
+
+    # - name: Run tests
+    #   run: docker-compose run test
