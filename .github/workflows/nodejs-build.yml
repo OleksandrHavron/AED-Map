@@ -1,0 +1,44 @@
+name: CI
+run-name: Building components
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+
+      - name: Run install for server
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+      - name: Run install for client
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install # will run `yarn install` command
+          dir: 'client'
+      - name: Run build for prod
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build:prod # will run `yarn build:prod` command
+        
+      # - name: Run build for prod
+      #   uses: borales/actions-yarn@v4
+      #   with:
+      #     cmd: build:prod # will run `yarn build:prod` command
+      # - name: Test the app
+      #   uses: borales/actions-yarn@v4
+      #   with:
+      #     cmd: test # will run `yarn test` command
+
+      # - name: Run test in sub-folder
+      #   uses: borales/actions-yarn@v4
+      #   with:
+      #     cmd: test
+      #     dir: 'frontend' # will run `yarn test` in `frontend` sub folder
