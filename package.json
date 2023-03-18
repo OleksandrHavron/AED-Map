@@ -68,7 +68,7 @@
     "migrate-mongo": "^7.1.0",
     "mongoose": "^5.9.5",
     "multer": "^1.4.2",
-    "multer-gridfs-storage": "^4.0.2",
+    "multer-gridfs-storage": "^5.0.2",
     "nodemailer": "^6.4.2",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
