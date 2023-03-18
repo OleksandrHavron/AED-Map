@@ -27,7 +27,7 @@ jobs:
       run: docker-compose build
     
     - name: Push server image to DockerHub
-      run: docker push hnom/aed-map-server:latest
+      run: docker push hnom/aed-map-server:latest #todo
 
     # - name: Run tests
     #   run: docker-compose run test
