@@ -19,6 +19,7 @@ services:
   # name is optional for our backend
   backend:
     build: ./
+    image: hnom/aed-map-server:latest
     container_name: aed-map-server
     restart: always
     ports:
@@ -35,6 +36,7 @@ services:
   # name is optional for our frontend
   # frontend:
   #   build: ./client
+  #   image: hnom/aed-map-client:latest
   #   container_name: aed-map-client
   #   restart: always
   #   ports:
