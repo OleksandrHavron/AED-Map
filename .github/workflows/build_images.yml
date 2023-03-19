@@ -33,7 +33,7 @@ jobs:
       with:
         registry: ${{ secrets.JF_REGISTRY }}
         username: ${{ secrets.JFROG_LOGIN }}
-        password: ${{ secrets.JF_ACCESS_TOKEN }}
+        password: ${{ secrets.JFROG_TOKEN }}
     
     # - name: Login
     #   env: 
