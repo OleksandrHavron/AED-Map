@@ -28,18 +28,18 @@ jobs:
         jf c use setup-jfrog-cli-server
         jf rt ping
 
-    # - name: Docker Login
-    #   uses: docker/login-action@v2
-    #   with:
-    #     registry: ${{ secrets.JF_URL }}
-    #     username: ${{ secrets.JFROG_LOGIN }}
-    #     password: ${{ secrets.JF_ACCESS_TOKEN }}
+    - name: Docker Login
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ secrets.JF_REGISTRY }}
+        username: ${{ secrets.JFROG_LOGIN }}
+        password: ${{ secrets.JF_ACCESS_TOKEN }}
     
-    - name: Login
-      env: 
-        DOCKER_USER: ${{ secrets.JFROG_LOGIN }}
-        DOCKER_PASS: ${{ secrets.JF_ACCESS_TOKEN }}
-      run: docker login -u $DOCKER_USER $JF_URL <<< $DOCKER_PASS
+    # - name: Login
+    #   env: 
+    #     DOCKER_USER: ${{ secrets.JFROG_LOGIN }}
+    #     DOCKER_PASS: ${{ secrets.JF_ACCESS_TOKEN }}
+    #   run: docker login -u $DOCKER_USER $JF_URL <<< $DOCKER_PASS
 
     - name: Build docker images
       run: docker-compose build
