@@ -9,7 +9,6 @@ jobs:
     name: Build Server image
     runs-on: ubuntu-latest
     env:
-      COMPOSE_FILE: docker-compose.yml
       DOCKER_USER: ${{ secrets.DOCKER_USER }}
       DOCKER_PASS: ${{ secrets.DOCKER_PASS }}
 
@@ -25,6 +24,15 @@ jobs:
     
     - name: Push server image to DockerHub
       run: docker push hnom/aed-map-server:latest #todo
+
+    - name: Notify about build status
+      uses: up9cloud/action-notify@master
+      env:
+        GITHUB_JOB_STATUS: ${{ job.status }}
+        TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
+        TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
+        CUSTOM_VAR1: ${{github.repository_owner}}
+        CUSTOM_VAR2: "a custom variable"
 
     # - name: Run tests
     #   run: docker-compose run test
