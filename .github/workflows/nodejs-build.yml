@@ -1,8 +1,11 @@
-name: Build node js app
+name: Build app
 run-name: Building components
 on: 
   push:  
     branches: 
+      - master
+  pull_request:
+    branches:
       - master
 
 jobs:
@@ -20,21 +23,29 @@ jobs:
       - name: Run install for server
         uses: borales/actions-yarn@v4
         with:
-          cmd: install # will run `yarn install` command
+          cmd: install
       - name: Run install for client
         uses: borales/actions-yarn@v4
         with:
-          cmd: install # will run `yarn install` command
+          cmd: install
           dir: 'client'
       - name: Run build for client
         uses: borales/actions-yarn@v4
         with:
-          cmd: build # will run `yarn build:prod` command
+          cmd: build 
           dir: 'client'
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: aed-map_build
+          path: |
+            client/build/
+            build/
 
       - name: Notify about build status
         uses: up9cloud/action-notify@master
-        if: ${{ job.status == fail }}
+        if: failure()
         env:
           GITHUB_JOB_STATUS: ${{ job.status }}
           TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
@@ -42,17 +53,3 @@ jobs:
           CUSTOM_VAR1: ${{github.repository_owner}}
           CUSTOM_VAR2: "a custom variable"
         
-      # - name: Run build for prod
-      #   uses: borales/actions-yarn@v4
-      #   with:
-      #     cmd: build:prod # will run `yarn build:prod` command
-      # - name: Test the app
-      #   uses: borales/actions-yarn@v4
-      #   with:
-      #     cmd: test # will run `yarn test` command
-
-      # - name: Run test in sub-folder
-      #   uses: borales/actions-yarn@v4
-      #   with:
-      #     cmd: test
-      #     dir: 'frontend' # will run `yarn test` in `frontend` sub folder
