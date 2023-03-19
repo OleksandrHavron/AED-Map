@@ -1,8 +1,8 @@
 # AED Map
 
 [![Build docker images](https://github.com/OleksandrHavron/AED-Map/actions/workflows/build_images.yml/badge.svg?branch=master)](https://github.com/OleksandrHavron/AED-Map/actions/workflows/build_images.yml)
-
 [![Build node js app](https://github.com/OleksandrHavron/AED-Map/actions/workflows/nodejs-build.yml/badge.svg?branch=master)](https://github.com/OleksandrHavron/AED-Map/actions/workflows/nodejs-build.yml)
+[![CodeQL](https://github.com/OleksandrHavron/AED-Map/actions/workflows/github-code-scanning/codeql/badge.svg?branch=develop)](https://github.com/OleksandrHavron/AED-Map/actions/workflows/github-code-scanning/codeql)
 
 
 ## 1. Prerequisites
