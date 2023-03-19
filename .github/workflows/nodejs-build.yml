@@ -50,6 +50,7 @@ jobs:
       
       - name: Upload artifacts to JFrog artifactory
         run: |
+          jf c use setup-jfrog-cli-server
           jf rt u client/build/ aed_map_rm
 
       - name: Notify about build status
