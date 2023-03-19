@@ -42,14 +42,13 @@ jobs:
           path: |
             client/build/
             build/
-
-      - uses: jfrog/setup-jfrog-cli@v3
+      - name: Upload artifacts to JFrog artifactory
+        uses: jfrog/setup-jfrog-cli@v3
         env:
           JF_URL: ${{ secrets.JF_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-      
-      - name: Upload artifacts to JFrog artifactory
-        run: |
+        
+      - run: |
           jf c use setup-jfrog-cli-server
           jf rt u client/build/ aed_map_rm
 
@@ -64,6 +63,7 @@ jobs:
           CUSTOM_VAR2: "a custom variable"
   
   deploy_app:
+    needs: build_client
     name: Deploy
     runs-on: ubuntu-latest
     steps:
