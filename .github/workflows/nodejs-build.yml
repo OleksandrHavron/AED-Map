@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  build:
+  build_client:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -43,6 +43,15 @@ jobs:
             client/build/
             build/
 
+      - uses: jfrog/setup-jfrog-cli@v3
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+      
+      - name: Upload artifacts to JFrog artifactory
+        run: |
+          jf rt u client/build/ aed_map_rm
+
       - name: Notify about build status
         uses: up9cloud/action-notify@master
         if: failure()
@@ -52,4 +61,8 @@ jobs:
           TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
           CUSTOM_VAR1: ${{github.repository_owner}}
           CUSTOM_VAR2: "a custom variable"
+  
+  deploy_app:
+    name: Deploy
+    runs-on: ubuntu-latest
         
