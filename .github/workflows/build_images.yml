@@ -32,7 +32,7 @@ jobs:
       env: 
         DOCKER_USER: ${{ secrets.JFROG_LOGIN }}
         DOCKER_PASS: ${{ secrets.JF_ACCESS_TOKEN }}
-      run: docker login -u $DOCKER_USER -p $DOCKER_PASS $URL
+      run: docker login -u $DOCKER_USER -p $DOCKER_PASS $JF_URL
 
     - name: Build docker images
       run: docker-compose build
