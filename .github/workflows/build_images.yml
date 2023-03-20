@@ -20,13 +20,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - uses: jfrog/setup-jfrog-cli@v3
-      env:
-        JF_URL: ${{ secrets.JF_URL }}
-        JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-    - run: |
-        jf c use setup-jfrog-cli-server
-        jf rt ping
+ #   - uses: jfrog/setup-jfrog-cli@v3
+ #     env:
+ #       JF_URL: ${{ secrets.JF_URL }}
+ #       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+ #    - run: |
+ #       jf c use setup-jfrog-cli-server
+ #       jf rt ping
 
     - name: Docker Login
       uses: docker/login-action@v2
