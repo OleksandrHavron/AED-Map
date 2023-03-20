@@ -20,26 +20,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
- #   - uses: jfrog/setup-jfrog-cli@v3
- #     env:
- #       JF_URL: ${{ secrets.JF_URL }}
- #       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
- #    - run: |
- #       jf c use setup-jfrog-cli-server
- #       jf rt ping
-
     - name: Docker Login
       uses: docker/login-action@v2
       with:
         registry: ${{ secrets.JF_REGISTRY }}
         username: ${{ secrets.JF_DOCKER_LOGIN }}
         password: ${{ secrets.JF_DOCKER_PASS }}
-    
-    # - name: Login
-    #   env: 
-    #     DOCKER_USER: ${{ secrets.JFROG_LOGIN }}
-    #     DOCKER_PASS: ${{ secrets.JF_ACCESS_TOKEN }}
-    #   run: docker login -u $DOCKER_USER $JF_URL <<< $DOCKER_PASS
 
     - name: Build docker images
       run: docker-compose build
@@ -62,4 +48,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      # - name: Deploy to Staging server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+      #     REMOTE_USER: ${{ secrets.REMOTE_USER }}
+      #     TARGET: ${{ secrets.REMOTE_TARGET }}
+      #     SCRIPT_BEFORE: |
+      #       //docker login
+      #       //docker pull
+
 
