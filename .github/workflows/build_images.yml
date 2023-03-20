@@ -32,8 +32,8 @@ jobs:
       uses: docker/login-action@v2
       with:
         registry: ${{ secrets.JF_REGISTRY }}
-        username: ${{ secrets.JFROG_LOGIN }}
-        password: ${{ secrets.JFROG_TOKEN }}
+        username: ${{ secrets.JF_DOCKER_LOGIN }}
+        password: ${{ secrets.JF_DOCKER_PASS }}
     
     # - name: Login
     #   env: 
