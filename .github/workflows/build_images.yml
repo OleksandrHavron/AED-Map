@@ -13,7 +13,7 @@ jobs:
     name: Build Server image
     runs-on: ubuntu-latest
     env:
-      URL: ${{ secrets.JF_URL }}
+      URL: ${{ secrets.JF_REGISTRY }}
       TAG: latest
 
     steps:
