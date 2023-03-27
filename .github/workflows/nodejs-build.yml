@@ -64,5 +64,8 @@ jobs:
           name: aed-map_build_${{ steps.date.outputs.date }}
           path: client/
       - name: Check artifact
-        run: ls client
-        
+        run: | 
+          pwd
+          ls client
+          cd client
+          ls
