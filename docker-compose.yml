@@ -19,7 +19,7 @@ services:
   # name is optional for our backend
   backend:
     build: ./
-    image: ${URL}/docker-local/aed-map-app:${TAG}
+    image: ${URL}/aed-map-app:${TAG}
     container_name: aed-map-server
     restart: always
     ports:

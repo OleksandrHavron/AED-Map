@@ -31,7 +31,7 @@ jobs:
       run: docker-compose build
     
     - name: Push server image to DockerHub
-      run: docker push ${URL}/docker-local/aed-map-app:${TAG}
+      run: docker push ${URL}/aed-map-app:${TAG}
 
     - name: Notify about build status
       uses: up9cloud/action-notify@master
