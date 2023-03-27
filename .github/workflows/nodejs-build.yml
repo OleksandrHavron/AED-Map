@@ -14,12 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Set Node.js 14.x
         uses: actions/setup-node@v3
         with:
           node-version: 14.x
-
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       - name: Run install for server
         uses: borales/actions-yarn@v4
         with:
@@ -36,7 +37,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: aed-map_build
+          name: aed-map_build_${{ steps.date.outputs.date }}
           path: |
             client/build/
       - name: Notify about build status
@@ -55,4 +56,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/download-artifact
+        with:
+          name: aed-map_build_${{ steps.date.outputs.date }}
+          path: client/
+      - name: Check artifact
+        run: ls
         
