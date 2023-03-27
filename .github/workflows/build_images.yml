@@ -7,26 +7,25 @@ on:
   pull_request:
     branches:
       - master
+  workflow_call:
+    inputs:
+      TAG:
+        required: true
+        type: string
+    
 
 jobs:
   test:
     name: Build Server image
     runs-on: ubuntu-latest
+
     env:
       URL: ${{ secrets.JF_REGISTRY }}
-      TAG: latest
+      TAG: ${{ inputs.TAG }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
- #   - uses: jfrog/setup-jfrog-cli@v3
- #     env:
- #       JF_URL: ${{ secrets.JF_URL }}
- #       JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
- #    - run: |
- #       jf c use setup-jfrog-cli-server
- #       jf rt ping
 
     - name: Docker Login
       uses: docker/login-action@v2
@@ -34,12 +33,6 @@ jobs:
         registry: ${{ secrets.JF_REGISTRY }}
         username: ${{ secrets.JF_DOCKER_LOGIN }}
         password: ${{ secrets.JF_DOCKER_PASS }}
-    
-    # - name: Login
-    #   env: 
-    #     DOCKER_USER: ${{ secrets.JFROG_LOGIN }}
-    #     DOCKER_PASS: ${{ secrets.JF_ACCESS_TOKEN }}
-    #   run: docker login -u $DOCKER_USER $JF_URL <<< $DOCKER_PASS
 
     - name: Build docker images
       run: docker-compose build
