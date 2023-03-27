@@ -42,15 +42,15 @@ jobs:
           path: |
             client/build/
             build/
-      # - name: Upload artifacts to JFrog artifactory
-      #   uses: jfrog/setup-jfrog-cli@v3
-      #   env:
-      #     JF_URL: ${{ secrets.JF_URL }}
-      #     JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+      - name: Upload artifacts to JFrog artifactory
+        uses: jfrog/setup-jfrog-cli@v3
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
         
-      # - run: |
-      #     jf c use setup-jfrog-cli-server
-      #     jf rt u client/build/ aed_map_rm
+      - run: |
+          jf c use setup-jfrog-cli-server
+          jf rt u client/build/ aed_map_rm
 
       - name: Notify about build status
         uses: up9cloud/action-notify@master
