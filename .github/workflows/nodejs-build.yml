@@ -62,10 +62,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: aed-map_build_${{ steps.date.outputs.date }}
-          path: client/
+          path: client/build/
       - name: Check artifact
         run: | 
           pwd
           ls client
-          cd client
-          ls
+      - uses: borales/actions-yarn@v4
+        with:  
+          cmd: start
