@@ -3,9 +3,10 @@ run-name: Build docker images
 on:
   workflow_call:
     inputs:
-      TAG:
+      tag:
         required: true
         type: string
+        default: latest
   push:  
     branches: 
       - master
@@ -22,7 +23,7 @@ jobs:
 
     env:
       URL: ${{ secrets.JF_REGISTRY }}
-      TAG: ${{ inputs.TAG }}
+      TAG: ${{ inputs.tag }}
 
     steps:
     - name: Checkout code
