@@ -1,0 +1,48 @@
+name: Build docker images
+run-name: Build docker images
+on:
+  push:  
+    branches: 
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    name: Build Server image
+    runs-on: ubuntu-latest
+    env:
+      URL: ${{ secrets.JF_REGISTRY }}
+      TAG: latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Docker Login
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ secrets.JF_REGISTRY }}
+        username: ${{ secrets.JF_DOCKER_LOGIN }}
+        password: ${{ secrets.JF_DOCKER_PASS }}
+
+    - name: Build docker images
+      run: docker-compose build
+    
+    - name: Push server image to DockerHub
+      run: docker push ${URL}/aed-map-app:${TAG}
+
+    - name: Notify about build status
+      uses: up9cloud/action-notify@master
+      env:
+        GITHUB_JOB_STATUS: ${{ job.status }}
+        TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
+        TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
+
+  deploy_app:
+    needs: test
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3

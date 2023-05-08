@@ -1,0 +1,72 @@
+name: Build app
+run-name: Building components
+on: 
+  push:  
+    branches: 
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build_client:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set Node.js 14.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.x
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: Run install for server
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+      - name: Run install for client
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+          dir: 'client'
+      - name: Run build for client
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: build 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: aed-map_build_${{ steps.date.outputs.date }}
+          path: |
+            client/build/
+      - name: Notify about build status
+        uses: up9cloud/action-notify@master
+        if: failure()
+        env:
+          GITHUB_JOB_STATUS: ${{ job.status }}
+          TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
+          TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
+          CUSTOM_VAR1: ${{github.repository_owner}}
+          CUSTOM_VAR2: "a custom variable"
+  
+  deploy_app:
+    needs: build_client
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - uses: actions/download-artifact@v3
+        with:
+          name: aed-map_build_${{ steps.date.outputs.date }}
+          path: client/build/
+      - name: Check artifact
+        run: | 
+          pwd
+          ls client
+      - uses: borales/actions-yarn@v4
+        with:  
+          cmd: start
