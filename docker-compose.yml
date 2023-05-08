@@ -4,17 +4,17 @@ version: '3.8'
 # services : is a list of our container
 services:
   # name is optional for our mongodb
-  mymongodb:
-    image: 'mongo'
-    restart: always
-    container_name: mongodb
-    command: mongod --noauth
-    ports:
-      - '27017:27017'
-    volumes:
-      - data:/data/db
-    networks:
-      - webappnetwork
+  # mymongodb:
+  #   image: 'mongo'
+  #   restart: always
+  #   container_name: mongodb
+  #   command: mongod --noauth
+  #   ports:
+  #     - '27017:27017'
+  #   volumes:
+  #     - data:/data/db
+  #   networks:
+  #     - webappnetwork
 
   # name is optional for our backend
   backend:
@@ -23,12 +23,14 @@ services:
     restart: always
     ports:
       - '3012:3012'
+    env_file:
+      - '.env'
 
     # depends_on means it will start our backend container once mongo-container is  up and running.
-    depends_on:
-      - mymongodb
-    links:
-      - mymongodb
+    # depends_on:
+    #   - mymongodb
+    # links:
+    #   - mymongodb
     networks:
       - webappnetwork
 

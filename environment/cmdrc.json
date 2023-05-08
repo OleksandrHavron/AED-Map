@@ -27,7 +27,5 @@
     "NODE_OPTIONS": "--http-parser=legacy",
     "BASE_URL": "http://aed-map.pp.ua"
   },
-  "docker": {
-    "MONGO_URL": "mongodb://host.docker.internal:27017/"
-  }
+  "docker": {}
 }

@@ -9,7 +9,7 @@
     "start:client": "cd client/ && yarn start",
     "start:server:dev:local": "env-cmd -e development -r ./environment/cmdrc.json nodemon start.js",
     "start:server:dev": "env-cmd -e development,production -r ./environment/cmdrc.json nodemon start.js",
-    "start:server:prod": "env-cmd -e development,production,docker -r ./environment/cmdrc.json nodemon start.js",
+    "start:server:prod": "env-cmd -f .env -r ./environment/cmdrc.json nodemon start.js",
     "dev": "concurrently --kill-others-on-fail \"yarn start:server:dev:local\" \"yarn start:client\"",
     "lint": "eslint server.js ./config ./models ./api ./shared --ext .js",
     "test-client": "cd client/ && yarn test",

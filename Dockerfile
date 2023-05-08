@@ -3,16 +3,19 @@
 # 2) Server part
 
 # Name the node stage "uiBuilder"
-FROM node:14.17.4-alpine AS uiBuilder
+FROM node:14.20.1-alpine AS uiBuilder
 # Set working directory
 WORKDIR /app
 # Copy all files from current directory to working dir in image
 COPY ./client .
+# COPY .env .
+# RUN export $( grep -vE "^(#.*|\s*)$" .env )
+# ENV SKIP_PREFLIGHT_CHECK=true
 # install node modules and build assets
 RUN yarn install && yarn build
 
 # Name the node stage "serverBuilder"
-FROM node:14.17.4-alpine AS serverBuilder
+FROM node:14.20.1-alpine AS serverBuilder
 # Set working directory
 WORKDIR /app
 # Copy all files from current directory to working dir in image
@@ -26,4 +29,4 @@ RUN yarn install
 # Expose port 3012
 EXPOSE 3012
 # Run server
-CMD [ "yarn", "start:server:prod" ]
+CMD [ "yarn", "start:server:prod", "--trace-warnings" ]
