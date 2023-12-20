@@ -1,0 +1,103 @@
+-
+  name: deploy
+  hosts: vm
+  tasks:
+    - name: Pull App
+      become: yes
+      become_user: root
+      shell: | 
+        cd /opt && git clone https://github.com/OleksandrHavron/AED-Map.git
+        
+    - name: Install packages
+      become: yes
+      become_user: root
+      shell: |
+        cd /opt/AED-Map
+        git checkout develop
+        # . /home/ubuntu/.nvm/nvm.sh
+        # # nvm use 14
+        yarn install
+        cd client && yarn install
+
+    - name: Build app
+      become: yes
+      become_user: root
+      shell: |
+        cd /opt/AED-Map
+        yarn build
+
+    - name: Start app
+      become: yes
+      become_user: root
+      shell: |
+        mkdir /etc/defibapp
+        cat << EOF > /etc/defibapp/defibapp.conf
+        MONGO_URL="{{ MONGO_URL }}"
+        MONGO_DB={{ MONGO_DB }}
+        MONGO_DB_USER={{ MONGO_DB_USER }}
+        MONGO_DB_PASSWORD={{ MONGO_DB_PASSWORD }}
+        MONGO_DB_HOST={{ MONGO_DB_HOST }}
+        MONGO_DB_NAME={{ MONGO_DB_NAME }}
+        ADMIN_EMAIL={{ ADMIN_EMAIL }}
+        ADMIN_PASSWORD={{ ADMIN_PASSWORD }}
+        SECRET_JWT_KEY_AUTH={{ SECRET_JWT_KEY_AUTH }}
+        EXPIRE_TIME_JWT_AUTH={{ EXPIRE_TIME_JWT_AUTH }}
+        SECRET_JWT_KEY_SIGN_UP={{ SECRET_JWT_KEY_SIGN_UP }}
+        EXPIRE_TIME_JWT_SIGN_UP={{ EXPIRE_TIME_JWT_SIGN_UP }}
+        SECRET_JWT_KEY_RESET={{ SECRET_JWT_KEY_RESET }}
+        EXPIRE_TIME_JWT_RESET={{ EXPIRE_TIME_JWT_RESET }}
+        BASE_URL={{ BASE_URL }}
+        EMAIL_USER={{ EMAIL_USER }}
+        EMAIL_PASSWORD={{ EMAIL_PASSWORD }}
+        EMAIL_FROM={{ EMAIL_FROM }}
+        GOOGLE_API_KEY={{ GOOGLE_API_KEY }}
+        EOF
+
+        cat << EOF > /lib/systemd/system/defibapp.service
+        [Unit]
+        Description=Defibrillator application
+        After=network-online.target
+        [Service]
+        Restart=always
+        WorkingDirectory=/opt/AED-Map
+        EnvironmentFile=/etc/defibapp/defibapp.conf
+        ExecStart=/usr/bin/yarn start 
+        [Install]
+        WantedBy=multi-user.target
+        EOF
+
+        systemctl daemon-reload
+        systemctl enable defibapp
+        systemctl start defibapp
+
+    - name: Set up Nginx
+      become: yes
+      become_user: root
+      shell: |
+        apt-get update && apt-get install nginx
+        cat << EOF > /etc/nginx/sites-available/defibapp
+        server  
+        { 
+                listen   80; 
+                #listen 443 ssl;
+                #listen [::]:443 ssl;
+                #ssl_certificate /opt/AED-Map/domain.crt;
+                #ssl_certificate_key /opt/AED-Map/domain.key;
+                #ssl_password_file /opt/AED-Map/domain.pass;
+                server_name aed.nevidkladka.org www.aed.nevidkladka.org;
+
+                location /  
+
+        { 
+                        proxy_set_header X-Real-IP $remote_addr; 
+                        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; 
+                        proxy_set_header Host $host; 
+                        proxy_set_header X-NginX-Proxy true; 
+                        proxy_pass http://localhost:3012/; 
+                        proxy_redirect http://localhost:3012/ https://$server_name/; 
+                } 
+        }
+        EOF
+        ln -s /etc/nginx/sites-available/defibapp /etc/nginx/sites-enabled/
+        systemctl enable nginx
+        systemctl restart nginx
